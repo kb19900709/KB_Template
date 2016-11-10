@@ -1,0 +1,17 @@
+package com.kb.exception.dao;
+
+import com.kb.exception.base.BaseRunTimeException;
+
+/**
+ * 
+ * @author KB
+ * @version 1.0
+ */
+public class HqlFunctionException extends BaseRunTimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public HqlFunctionException(String errorMsg) {
+		super(errorMsg);
+	}
+}

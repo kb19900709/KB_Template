@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<sql-query name="sql.company.getAllCompany">
+		select * from company
+	</sql-query>
+	
+	<sql-query name="sql.company.getCompanyByCompanyCapitalization">
+		select * from company where company_capitalization = :company_capitalization and modify_user = :mu
+	</sql-query>
+	
+	<sql-query name="sql.company.getCompanyInfo">
+		select count(*) as total, avg(company_capitalization) as avgCap from company
+	</sql-query>
+	
+	<sql-query name="sql.company.getCompanyInfoByUser">
+		select count(*) as total, avg(company_capitalization) as avgCap from company 
+		where modify_user = :mu
+	</sql-query>
+	
+	<sql-query name="hql.company.getAllCompany">
+		from Company as comp
+	</sql-query>
+	
+	<sql-query name="hql.company.getCompanyByCompanyCapitalization">
+		from Company as comp where comp.companyCapitalization = :companyCapitalization and comp.modifyUser = :modifyUser
+	</sql-query>
+</hibernate-mapping>
