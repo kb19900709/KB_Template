@@ -89,7 +89,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@Override
 	public void deleteByPk(K k) {
 		Session session = getSession();
-		Object entity = session.get(DeveloperUtils.getGenericFirstClass(this), k);
+		Object entity = session.get(DeveloperUtils.getGenericClass(this, 0), k);
 		if (entity != null) {
 			session.delete(entity);
 		}
@@ -115,7 +115,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@Override
 	public SQLQuery getEntityNamedQuery(String sqlNamed, Map<String, Object> queryMap) {
 		SQLQuery namedQuery = getNamedSQLQuery(sqlNamed);
-		namedQuery.addEntity(DeveloperUtils.getGenericFirstClass(this));
+		namedQuery.addEntity(DeveloperUtils.getGenericClass(this, 0));
 		if (MapUtils.isNotEmpty(queryMap)) {
 			namedQuery.setProperties(queryMap);
 		}
@@ -154,7 +154,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	public List<T> query(HqlFunction hqlFunction, Order... orders) {
 		Query hqlQuery = null;
 		try {
-			Class<T> clazz = (Class<T>) DeveloperUtils.getGenericFirstClass(this);
+			Class<T> clazz = (Class<T>) DeveloperUtils.getGenericClass(this, 0);
 			hqlQuery = getHqlQuery(hqlGenerator(clazz.newInstance(), hqlFunction, orders));
 		} catch (InstantiationException | IllegalAccessException e) {
 			String errorMsg = String.format("BaseHibernateDao.query has internal error because ... %s", e.getMessage());
@@ -181,7 +181,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> queryAll(Order... orders) {
-		Class<T> clazz = (Class<T>) DeveloperUtils.getGenericFirstClass(this);
+		Class<T> clazz = (Class<T>) DeveloperUtils.getGenericClass(this, 0);
 		try {
 			return query(clazz.newInstance(), orders);
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -210,13 +210,13 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public T queryByPk(K k) {
-		return (T) getSession().get(DeveloperUtils.getGenericFirstClass(this), k);
+		return (T) getSession().get(DeveloperUtils.getGenericClass(this, 0), k);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public T queryLazyInstanceByPk(K k) {
-		return (T) getSession().load(DeveloperUtils.getGenericFirstClass(this), k);
+		return (T) getSession().load(DeveloperUtils.getGenericClass(this, 0), k);
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 	@SuppressWarnings("unchecked")
 	private T getEntityFromMap(Map<String, Object> dataMap) {
-		Class<T> genericClass = (Class<T>) DeveloperUtils.getGenericFirstClass(this);
+		Class<T> genericClass = (Class<T>) DeveloperUtils.getGenericClass(this, 0);
 		T beanResult = DeveloperUtils.mapToBean(dataMap, genericClass);
 		return beanResult;
 	}
@@ -336,6 +336,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 			}
 		}
 
+		// 開啟 debug 可以看到產出 HQL 實際字串（由字串表達參數）
 		logger.info("BaseHibernateDao.hqlNormalGenerator hql format ... {}", sbHqlGenRecord.toString());
 		logger.debug("BaseHibernateDao.hqlNormalGenerator hql actual format ... {}", sbHqlGenActualRecord.toString());
 

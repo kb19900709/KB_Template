@@ -34,7 +34,7 @@ import com.kb.utils.DeveloperUtils;
 import com.kb.utils.date.DateFormat;
 
 /**
- * HqlFunction 提供者
+ * HqlFunction 補助類別
  * 
  * @author KB
  * @version 1.0

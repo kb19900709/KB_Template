@@ -103,13 +103,15 @@ public class DeveloperUtils {
 	}
 
 	/**
-	 * 取得泛型第一個參數的類別
+	 * 取得泛型類別
 	 * 
 	 * @param target
+	 * @param index
 	 * @return
 	 */
-	public static Class<?> getGenericFirstClass(Object target) {
-		return (Class<?>) ((ParameterizedType) target.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	public static Class<?> getGenericClass(Object target, int index) {
+		return (Class<?>) ((ParameterizedType) target.getClass().getGenericSuperclass())
+				.getActualTypeArguments()[index];
 	}
 
 	/**

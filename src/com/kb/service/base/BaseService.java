@@ -40,14 +40,14 @@ public class BaseService<T extends BaseEntity, K extends Serializable> {
 	@SuppressWarnings("unchecked")
 	@Autowired
 	private void registerDefaultDaoDao(ApplicationContext appContext) {
-		Class<?> currentGenericClass = DeveloperUtils.getGenericFirstClass(this);
+		Class<?> currentGenericClass = DeveloperUtils.getGenericClass(this, 0);
 
 		Map<String, Object> beansWithAnnotation = appContext.getBeansWithAnnotation(Repository.class);
 		Class<?> repositoryClass;
 		Object targetClass;
 		for (Entry<String, Object> set : beansWithAnnotation.entrySet()) {
 			targetClass = set.getValue();
-			repositoryClass = DeveloperUtils.getGenericFirstClass(targetClass);
+			repositoryClass = DeveloperUtils.getGenericClass(targetClass, 0);
 			if (currentGenericClass.equals(repositoryClass)) {
 				this.defaultDao = (BaseHibernateDaoImpl<T, K>) targetClass;
 				break;
