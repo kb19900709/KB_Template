@@ -22,7 +22,7 @@ import com.kb.dao.base.support.Order;
 public interface BaseHibernateDao<T extends BaseEntity, K extends Serializable> extends BaseDao<T, K> {
 
 	/**
-	 * 強制 flush
+	 * 強制 flush session persistence context
 	 */
 	void flush();
 
@@ -77,6 +77,17 @@ public interface BaseHibernateDao<T extends BaseEntity, K extends Serializable> 
 	Session getSession();
 
 	/**
+	 * <pre>
+	 * Hibernate merge
+	 * http://docs.jboss.org/hibernate/orm/3.5/javadocs/org/hibernate/Session.html#merge(java.lang.Object)
+	 * </pre>
+	 * 
+	 * @param t
+	 * @return
+	 */
+	T merge(T t);
+
+	/**
 	 * 僅使用部分函示查詢
 	 * 
 	 * @param clazz
@@ -111,4 +122,12 @@ public interface BaseHibernateDao<T extends BaseEntity, K extends Serializable> 
 	 * @return
 	 */
 	T queryLazyInstanceByPk(K k);
+
+	/**
+	 * 儲存或是更新物件
+	 * 
+	 * @param t
+	 * @return
+	 */
+	T saveOrUpdate(T t);
 }

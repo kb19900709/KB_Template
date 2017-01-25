@@ -151,6 +151,12 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public T merge(T t) {
+		return (T) getSession().merge(t);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<T> query(HqlFunction hqlFunction, Order... orders) {
 		Query hqlQuery = null;
 		try {
@@ -222,6 +228,18 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@Override
 	public T save(T t) {
 		getSession().save(t);
+		return t;
+	}
+
+	@Override
+	public T saveOrUpdate(T t) {
+		getSession().saveOrUpdate(t);
+		return t;
+	}
+
+	@Override
+	public T update(T t) {
+		getSession().update(t);
 		return t;
 	}
 

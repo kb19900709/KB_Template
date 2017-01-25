@@ -65,10 +65,18 @@ public interface BaseDao<T extends BaseEntity, K extends Serializable> {
 	T queryByPk(K k);
 
 	/**
-	 * 儲存該物件
+	 * 儲存物件
 	 * 
 	 * @param t
 	 * @return
 	 */
 	T save(T t);
+
+	/**
+	 * 更新物件
+	 * 
+	 * @param t
+	 * @return
+	 */
+	T update(T t);
 }
