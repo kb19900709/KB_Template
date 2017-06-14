@@ -35,7 +35,9 @@ import com.kb.utils.date.DateFormat;
  * @version 1.0
  * @see com.kb.dao.base.BaseDao
  */
-public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> implements BaseHibernateDao<T, K> {
+public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable>
+		implements
+			BaseHibernateDao<T, K> {
 
 	/**
 	 * HQL 中繼類別
@@ -51,7 +53,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 		private Map<String, Object> queryMap;
 
-		public HqlRecord(T params, String hqlGenRecord, Map<String, Object> queryMap) {
+		public HqlRecord(T params, String hqlGenRecord,
+				Map<String, Object> queryMap) {
 			super();
 			this.hqlGenRecord = hqlGenRecord;
 			this.params = params;
@@ -71,7 +74,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 		}
 	}
 
-	private static Logger logger = LoggerFactory.getLogger(BaseHibernateDaoImpl.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(BaseHibernateDaoImpl.class);
 
 	@Value("${env.hibernate.alias}")
 	private String alias;
@@ -101,8 +105,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	}
 
 	@Override
-	public <D extends BaseDto> SQLQuery getDtoNamedQuery(String sqlNamed, Map<String, Object> queryMap,
-			Class<D> clazz) {
+	public <D extends BaseDto> SQLQuery getDtoNamedQuery(String sqlNamed,
+			Map<String, Object> queryMap, Class<D> clazz) {
 		SQLQuery namedQuery = getNamedSQLQuery(sqlNamed);
 		HibernateSupport.bindingDtoScalar(namedQuery, clazz);
 		namedQuery.setResultTransformer(Transformers.aliasToBean(clazz));
@@ -113,7 +117,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	}
 
 	@Override
-	public SQLQuery getEntityNamedQuery(String sqlNamed, Map<String, Object> queryMap) {
+	public SQLQuery getEntityNamedQuery(String sqlNamed,
+			Map<String, Object> queryMap) {
 		SQLQuery namedQuery = getNamedSQLQuery(sqlNamed);
 		namedQuery.addEntity(DeveloperUtils.getGenericClass(this, 0));
 		if (MapUtils.isNotEmpty(queryMap)) {
@@ -130,7 +135,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	}
 
 	@Override
-	public SQLQuery getMapNamedQuery(String sqlNamed, Map<String, Object> queryMap) {
+	public SQLQuery getMapNamedQuery(String sqlNamed,
+			Map<String, Object> queryMap) {
 		SQLQuery namedQuery = getNamedSQLQuery(sqlNamed);
 		namedQuery.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 		if (MapUtils.isNotEmpty(queryMap)) {
@@ -161,9 +167,12 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 		Query hqlQuery = null;
 		try {
 			Class<T> clazz = (Class<T>) DeveloperUtils.getGenericClass(this, 0);
-			hqlQuery = getHqlQuery(hqlGenerator(clazz.newInstance(), hqlFunction, orders));
+			hqlQuery = getHqlQuery(
+					hqlGenerator(clazz.newInstance(), hqlFunction, orders));
 		} catch (InstantiationException | IllegalAccessException e) {
-			String errorMsg = String.format("BaseHibernateDao.query has internal error because ... %s", e.getMessage());
+			String errorMsg = String.format(
+					"BaseHibernateDao.query has internal error because ... %s",
+					e.getMessage());
 			logger.error(errorMsg);
 			throw new BaseRunTimeException(errorMsg);
 		}
@@ -191,7 +200,9 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 		try {
 			return query(clazz.newInstance(), orders);
 		} catch (InstantiationException | IllegalAccessException e) {
-			String errorMsg = String.format("BaseHibernateDao.query has internal error because ... %s", e.getMessage());
+			String errorMsg = String.format(
+					"BaseHibernateDao.query has internal error because ... %s",
+					e.getMessage());
 			logger.error(errorMsg);
 			throw new BaseRunTimeException(errorMsg);
 		}
@@ -199,9 +210,11 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> queryByMap(Map<String, Object> dataMap, HqlFunction hqlFunction, Order... orders) {
+	public List<T> queryByMap(Map<String, Object> dataMap,
+			HqlFunction hqlFunction, Order... orders) {
 		T entityFromMap = getEntityFromMap(dataMap);
-		Query hqlQuery = getHqlQuery(hqlGenerator(entityFromMap, hqlFunction, orders));
+		Query hqlQuery = getHqlQuery(
+				hqlGenerator(entityFromMap, hqlFunction, orders));
 		return hqlQuery.list();
 	}
 
@@ -222,7 +235,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	@SuppressWarnings("unchecked")
 	@Override
 	public T queryLazyInstanceByPk(K k) {
-		return (T) getSession().load(DeveloperUtils.getGenericClass(this, 0), k);
+		return (T) getSession().load(DeveloperUtils.getGenericClass(this, 0),
+				k);
 	}
 
 	@Override
@@ -251,9 +265,9 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 	@SuppressWarnings("unchecked")
 	private T getEntityFromMap(Map<String, Object> dataMap) {
-		Class<T> genericClass = (Class<T>) DeveloperUtils.getGenericClass(this, 0);
-		T beanResult = DeveloperUtils.mapToBean(dataMap, genericClass);
-		return beanResult;
+		Class<T> genericClass = (Class<T>) DeveloperUtils.getGenericClass(this,
+				0);
+		return DeveloperUtils.mapToBean(dataMap, genericClass);
 	}
 
 	/**
@@ -279,7 +293,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 	private SQLQuery getNamedSQLQuery(String sqlNamed) {
 		Session currentSession = getSession();
-		String queryString = currentSession.getNamedQuery(sqlNamed).getQueryString();
+		String queryString = currentSession.getNamedQuery(sqlNamed)
+				.getQueryString();
 		return currentSession.createSQLQuery(queryString);
 	}
 
@@ -291,7 +306,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 	 * @param orders
 	 * @return
 	 */
-	private HqlRecord hqlGenerator(T t, HqlFunction hqlFunction, Order... orders) {
+	private HqlRecord hqlGenerator(T t, HqlFunction hqlFunction,
+			Order... orders) {
 		StringBuffer sbHqlGenRecord = new StringBuffer();
 		StringBuffer sbHqlGenActualRecord = new StringBuffer();
 		String entityName = t.getClass().getSimpleName();
@@ -299,10 +315,12 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 		// 產生標準語法HQL
 		String standardQuery = "from %s as %s where 1=1 ";
 		sbHqlGenRecord.append(String.format(standardQuery, entityName, alias));
-		sbHqlGenActualRecord.append(String.format(standardQuery, entityName, alias));
+		sbHqlGenActualRecord
+				.append(String.format(standardQuery, entityName, alias));
 
 		// 產生屬性查詢HQL
-		Map<String, Serializable> beanMap = DeveloperUtils.beanToSerializableMap(t);
+		Map<String, Serializable> beanMap = DeveloperUtils
+				.beanToSerializableMap(t);
 		if (MapUtils.isNotEmpty(beanMap)) {
 			String field;
 			Serializable value, cloneValue;
@@ -311,12 +329,15 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 				if (value != null) {
 					cloneValue = SerializationUtils.clone(value);
 					if (cloneValue instanceof Date) {
-						cloneValue = DeveloperUtils.timeFormat((Date) cloneValue, DateFormat.TIMESTAMP);
+						cloneValue = DeveloperUtils.timeFormat(
+								(Date) cloneValue, DateFormat.TIMESTAMP);
 					}
 
 					field = set.getKey();
-					sbHqlGenRecord.append(String.format("and %s.%s = :%s ", alias, field, field));
-					sbHqlGenActualRecord.append(String.format("and %s.%s = '%s' ", alias, field, cloneValue));
+					sbHqlGenRecord.append(String.format("and %s.%s = :%s ",
+							alias, field, field));
+					sbHqlGenActualRecord.append(String.format(
+							"and %s.%s = '%s' ", alias, field, cloneValue));
 				}
 			}
 		}
@@ -325,7 +346,8 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 		Map<String, Object> queryMap = null;
 		if (hqlFunction != null) {
 			appendDesc(sbHqlGenRecord, hqlFunction.getHqlFunctionRecord());
-			appendDesc(sbHqlGenActualRecord, hqlFunction.getHqlFunctionActualRecord());
+			appendDesc(sbHqlGenActualRecord,
+					hqlFunction.getHqlFunctionActualRecord());
 			queryMap = hqlFunction.getQueryMap();
 		}
 
@@ -342,21 +364,27 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 			for (int i = 0; i < orders.length; i++) {
 				order = orders[i];
 				if (i != 0) {
-					sbHqlGenRecord.append(String.format(orderByTemplate1, alias, order.getFieldName(),
+					sbHqlGenRecord.append(String.format(orderByTemplate1, alias,
+							order.getFieldName(),
 							order.getOrderSup().getSort()));
-					sbHqlGenActualRecord.append(String.format(orderByTemplate1, alias, order.getFieldName(),
+					sbHqlGenActualRecord.append(String.format(orderByTemplate1,
+							alias, order.getFieldName(),
 							order.getOrderSup().getSort()));
 				}
-				sbHqlGenRecord.append(
-						String.format(orderByTemplate0, alias, order.getFieldName(), order.getOrderSup().getSort()));
-				sbHqlGenActualRecord.append(
-						String.format(orderByTemplate0, alias, order.getFieldName(), order.getOrderSup().getSort()));
+				sbHqlGenRecord.append(String.format(orderByTemplate0, alias,
+						order.getFieldName(), order.getOrderSup().getSort()));
+				sbHqlGenActualRecord.append(String.format(orderByTemplate0,
+						alias, order.getFieldName(),
+						order.getOrderSup().getSort()));
 			}
 		}
 
 		// 開啟 debug 可以看到產出 HQL 實際字串（由字串表達參數）
-		logger.info("BaseHibernateDao.hqlNormalGenerator hql format ... {}", sbHqlGenRecord.toString());
-		logger.debug("BaseHibernateDao.hqlNormalGenerator hql actual format ... {}", sbHqlGenActualRecord.toString());
+		logger.info("BaseHibernateDao.hqlNormalGenerator hql format ... {}",
+				sbHqlGenRecord.toString());
+		logger.debug(
+				"BaseHibernateDao.hqlNormalGenerator hql actual format ... {}",
+				sbHqlGenActualRecord.toString());
 
 		return new HqlRecord(t, sbHqlGenRecord.toString(), queryMap);
 	}
